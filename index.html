@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پنل V2Ray - نسخه کامپکت</title>
+    <title>پنل V2Ray - نسخه خریداری شده</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -250,7 +249,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>پنل V2Ray - نسخه کامپکت</h1>
+            <h1>پنل V2Ray - نسخه خریداری شده</h1>
             <p>مدیریت سریع اشتراک و سرورها</p>
         </header>
 
@@ -413,10 +412,14 @@
 
         const flagEmojis = ["🇩🇪", "🇮🇩", "🇰🇷", "🇺🇸", "🇨🇦", "🇫🇮", "🇬🇧"];
 
+        // تنظیمات
+        const TOTAL_GB = 100000;
         const INITIAL_VOLUME_MIN_GB = 3695;
         const INITIAL_VOLUME_MAX_GB = 3998;
-        const INITIAL_REMAINING_HOURS = 29 * 24 + 2; // 29 روز و 2 ساعت
-        const PERIOD_MS = 30 * 24 * 60 * 60 * 1000;
+        const INITIAL_REMAINING_DAYS = 29;
+        const INITIAL_REMAINING_HOURS = 2;
+        const PERIOD_DAYS = 30;
+        const PERIOD_MS = PERIOD_DAYS * 24 * 60 * 60 * 1000;
         const CONSUMPTION_MIN = 40;
         const CONSUMPTION_MAX = 60;
 
@@ -436,27 +439,37 @@
             const now = Date.now();
 
             if (!savedStart) {
-                const randomGB = INITIAL_VOLUME_MIN_GB + Math.random() * (INITIAL_VOLUME_MAX_GB - INITIAL_VOLUME_MIN_GB);
-                const initialVolumeMB = randomGB * 1024;
+                // اولین بار — حجم رندم دقیق با 3 رقم اعشار
+                const randomGB = INITIAL_VOLUME_MIN_GB + Math.random() * (INITIAL_VOLUME_MAX_GB - INITIAL_VOLUME_MIN_GB + 0.001);
+                const initialRemainingGB = Math.round(randomGB * 1000) / 1000; // دقیق 3 رقم اعشار
+                const initialRemainingMB = initialRemainingGB * 1024;
 
-                periodStartTime = now - (PERIOD_MS - (INITIAL_REMAINING_HOURS * 60 * 60 * 1000));
-                totalConsumedMB = (100000 * 1024) - initialVolumeMB;
+                // زمان شروع: 29 روز و 2 ساعت باقی‌مانده
+                const passedMs = (PERIOD_DAYS - INITIAL_REMAINING_DAYS - 1) * 24 * 60 * 60 * 1000 + (24 - INITIAL_REMAINING_HOURS) * 60 * 60 * 1000;
+                periodStartTime = now - passedMs;
+
+                totalConsumedMB = (TOTAL_GB * 1024) - initialRemainingMB;
                 lastUpdateTime = now;
             } else {
                 periodStartTime = parseInt(savedStart);
                 totalConsumedMB = parseFloat(savedConsumed) || 0;
                 lastUpdateTime = parseInt(savedLast) || periodStartTime;
 
+                // اگر دوره تموم شده، دوباره با مقادیر جدید شروع کن
                 if (now - periodStartTime >= PERIOD_MS) {
-                    const randomGB = INITIAL_VOLUME_MIN_GB + Math.random() * (INITIAL_VOLUME_MAX_GB - INITIAL_VOLUME_MIN_GB);
-                    const initialVolumeMB = randomGB * 1024;
+                    const randomGB = INITIAL_VOLUME_MIN_GB + Math.random() * (INITIAL_VOLUME_MAX_GB - INITIAL_VOLUME_MIN_GB + 0.001);
+                    const initialRemainingGB = Math.round(randomGB * 1000) / 1000;
+                    const initialRemainingMB = initialRemainingGB * 1024;
 
-                    periodStartTime = now - (PERIOD_MS - (INITIAL_REMAINING_HOURS * 60 * 60 * 1000));
-                    totalConsumedMB = (100000 * 1024) - initialVolumeMB;
+                    const passedMs = (PERIOD_DAYS - INITIAL_REMAINING_DAYS - 1) * 24 * 60 * 60 * 1000 + (24 - INITIAL_REMAINING_HOURS) * 60 * 60 * 1000;
+                    periodStartTime = now - passedMs;
+
+                    totalConsumedMB = (TOTAL_GB * 1024) - initialRemainingMB;
                     lastUpdateTime = now;
                 }
             }
 
+            // مصرف آفلاین
             const elapsedSec = (now - lastUpdateTime) / 1000;
             if (elapsedSec > 0) {
                 const rate = CONSUMPTION_MIN + Math.random() * (CONSUMPTION_MAX - CONSUMPTION_MIN);
@@ -486,7 +499,7 @@
             const minutes = Math.floor((timeRemainingMs % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((timeRemainingMs % (1000 * 60)) / 1000);
 
-            const remainingMB = (100000 * 1024) - totalConsumedMB;
+            const remainingMB = (TOTAL_GB * 1024) - totalConsumedMB;
             const remainingGB = (remainingMB / 1024).toFixed(3);
             const consumedGB = (totalConsumedMB / 1024).toFixed(3);
 
@@ -495,7 +508,7 @@
             document.getElementById('time-remaining').textContent = `${days} روز`;
             document.getElementById('time-detail').textContent = `${days} روز، ${hours} ساعت، ${minutes} دقیقه، ${seconds} ثانیه`;
 
-            const progressPercent = (totalConsumedMB / (100000 * 1024)) * 100;
+            const progressPercent = (totalConsumedMB / (TOTAL_GB * 1024)) * 100;
             document.getElementById('volume-progress').style.width = `${Math.min(progressPercent, 100)}%`;
         }
 
@@ -508,7 +521,7 @@
 
         function copyConfig(index) {
             let config = baseConfigs[index];
-            const remainingGB = ((100000 * 1024 - totalConsumedMB) / 1024).toFixed(3);
+            const remainingGB = ((TOTAL_GB * 1024 - totalConsumedMB) / 1024).toFixed(3);
             const consumedGB = (totalConsumedMB / 1024).toFixed(3);
             const days = Math.floor((PERIOD_MS - (Date.now() - periodStartTime)) / (1000 * 60 * 60 * 24));
 
@@ -529,7 +542,7 @@
 
         function copyAllConfigs() {
             const allConfigs = [];
-            const remainingGB = ((100000 * 1024 - totalConsumedMB) / 1024).toFixed(3);
+            const remainingGB = ((TOTAL_GB * 1024 - totalConsumedMB) / 1024).toFixed(3);
             const consumedGB = (totalConsumedMB / 1024).toFixed(3);
             const days = Math.floor((PERIOD_MS - (Date.now() - periodStartTime)) / (1000 * 60 * 60 * 24));
 
@@ -584,10 +597,9 @@
 
         function addToApp() { alert('از دکمه‌های کپی کانفیگ استفاده کنید!'); }
 
-        // شروع
         loadFromStorage();
         updateDisplay();
         setInterval(consumeOnline, 1000);
     </script>
 </body>
-                    </html>
+                                                  </html>
