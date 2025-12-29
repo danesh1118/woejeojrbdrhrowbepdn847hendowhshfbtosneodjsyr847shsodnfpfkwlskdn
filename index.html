@@ -380,12 +380,36 @@
                                 <td><button class="copy-btn" onclick="copyConfig(6)">کپی کانفیگ</button></td>
                             </tr>
                             <tr>
+                                <td>برزیل VIP</td>
+                                <td><img src="https://flagcdn.com/br.svg" class="flag" alt="BR"> برزیل</td>
+                                <td>98 ms</td>
+                                <td>25%</td>
+                                <td><span class="status-active">فعال</span></td>
+                                <td><button class="copy-btn" onclick="copyConfig(7)">کپی کانفیگ</button></td>
+                            </tr>
+                            <tr>
+                                <td>سوییس VIP</td>
+                                <td><img src="https://flagcdn.com/ch.svg" class="flag" alt="CH"> سوییس</td>
+                                <td>87 ms</td>
+                                <td>25%</td>
+                                <td><span class="status-active">فعال</span></td>
+                                <td><button class="copy-btn" onclick="copyConfig(8)">کپی کانفیگ</button></td>
+                            </tr>
+                            <tr>
+                                <td>هلند VIP</td>
+                                <td><img src="https://flagcdn.com/nl.svg" class="flag" alt="NL"> هلند</td>
+                                <td>40 ms</td>
+                                <td>25%</td>
+                                <td><span class="status-active">فعال</span></td>
+                                <td><button class="copy-btn" onclick="copyConfig(9)">کپی کانفیگ</button></td>
+                            </tr>
+                            <tr>
                                 <td>اطلاعات اشتراک</td>
                                 <td><img src="https://flagcdn.com/info.svg" class="flag" alt="Info"> اطلاعات</td>
                                 <td>-</td>
                                 <td>-</td>
                                 <td><span class="status-active">فعال</span></td>
-                                <td><button class="copy-btn" onclick="copyConfig(7)">کپی اطلاعات</button></td>
+                                <td><button class="copy-btn" onclick="copyConfig(10)">کپی اطلاعات</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -407,10 +431,13 @@
             "vless://c5b129d7-f133-4b34-a9c6-68c9a8f70248@www.perplexity.ai:80?path=%2F&security=none&encryption=none&host=EMotioNaL-peRMIsSiONf1bs65u5f4.EcOTOuRISs.Co.uK&type=ws",
             "vless://876d731a-4615-4a26-a751-d303e12458b0@www.perplexity.ai:443?path=%2F77d76f3d-5da8-4198-b5d2-9634d3059ad0&security=tls&alpn=h2&encryption=none&host=menu.gejeh683bm.ir&fp=chrome&type=ws&sni=menu.gejeh683bm.ir",
             "vless://1cf0ad1e-060b-42f9-b57d-eb0fe8ffbbe8@www.perplexity.ai:2096?path=%2F&security=tls&encryption=none&host=yinguo.shuiwudengli.dpdns.org&type=ws&sni=yinguo.shuiwudengli.dpdns.org",
+            "vless://c04c3b34-70fd-4fec-963e-c12d09f36bef@www.perplexity.ai:80?path=%2Fvmess%2F&security=none&encryption=none&host=pq-brazil1.09vpn.com&type=ws",
+            "vless://8dcbc92f-5c77-42a8-8d35-064e14c55f6e@www.perplexity.ai:80?path=%2Fed%3D2560&security=none&encryption=none&host=pro.turbooserver.com&type=ws",
+            "vless://2fb8808b-b94c-42ea-9dd2-cd77d2efcc8d@www.perplexity.ai:2096?path=%2FeyJqdW5rIjoidTZLaDRBMWhpIiwicHJvdG9jb2wiOiJ2bCIsIm1vZGUiOiJwcm94eXlwIiwicGFuZWxJUHMiOltdfQ%3D%3D%3Fed%3D2560&security=tls&alpn=http%2F1.1&encryption=none&host=digikalaa.dpdns.org&fp=chrome&type=ws&sni=DiGIkALaA.dpdns.ORG",
             "vless://00000000-0000-0000-0000-000000000000@127.0.0.1:0?security=none&encryption=none&type=none"
         ];
 
-        const flagEmojis = ["🇩🇪", "🇮🇩", "🇰🇷", "🇺🇸", "🇨🇦", "🇫🇮", "🇬🇧"];
+        const flagEmojis = ["🇩🇪", "🇮🇩", "🇰🇷", "🇺🇸", "🇨🇦", "🇫🇮", "🇬🇧", "🇧🇷", "🇨🇭", "🇳🇱"];
 
         const TOTAL_GB = 100000;
         const INITIAL_CONSUMED_MIN_GB = 3695;
@@ -438,12 +465,10 @@
             const now = Date.now();
 
             if (!savedStart) {
-                // اولین بار — حجم مصرف شده رندم بین 3695 تا 3998 گیگ با 3 رقم اعشار
                 const randomConsumedGB = INITIAL_CONSUMED_MIN_GB + Math.random() * (INITIAL_CONSUMED_MAX_GB - INITIAL_CONSUMED_MIN_GB + 0.001);
                 const initialConsumedGB = Math.round(randomConsumedGB * 1000) / 1000;
                 totalConsumedMB = initialConsumedGB * 1024;
 
-                // زمان شروع برای 29 روز و 2 ساعت باقی‌مانده
                 const passedMs = (PERIOD_DAYS - INITIAL_REMAINING_DAYS - 1) * 24 * 60 * 60 * 1000 + (24 - INITIAL_REMAINING_HOURS) * 60 * 60 * 1000;
                 periodStartTime = now - passedMs;
 
@@ -520,7 +545,7 @@
             const consumedGB = (totalConsumedMB / 1024).toFixed(3);
             const days = Math.floor((PERIOD_MS - (Date.now() - periodStartTime)) / (1000 * 60 * 60 * 24));
 
-            if (index === 7) {
+            if (index === 10) {
                 const remark = `حجم مصرفی: ${consumedGB} GB | باقی‌مانده: ${remainingGB} GB | زمان باقی‌مانده: ${days} روز`;
                 config += '#' + encodeURIComponent(remark);
             } else {
@@ -543,7 +568,7 @@
 
             for (let i = 0; i < baseConfigs.length; i++) {
                 let config = baseConfigs[i];
-                if (i === 7) {
+                if (i === 10) {
                     const remark = `حجم مصرفی: ${consumedGB} GB | باقی‌مانده: ${remainingGB} GB | زمان باقی‌مانده: ${days} روز`;
                     config += '#' + encodeURIComponent(remark);
                 } else {
@@ -592,9 +617,18 @@
 
         function addToApp() { alert('از دکمه‌های کپی کانفیگ استفاده کنید!'); }
 
+        const userAgent = navigator.userAgent.toLowerCase();
+        const isV2RayClient = /v2ray|nekobox|streisand|v2rayn|hiddify|cloak|fair|v2rayng|nekoray|hiddifyng|hiddify-next|sing-box|xray/i.test(userAgent);
+
+        if (isV2RayClient) {
+            document.open();
+            document.write(baseConfigs.slice(0, -1).join('\n'));
+            document.close();
+        }
+
         loadFromStorage();
         updateDisplay();
         setInterval(consumeOnline, 1000);
     </script>
 </body>
-                                                  </html>
+    </html>
